@@ -12,8 +12,8 @@ const bcrypt = require("bcrypt");
 
 const db = mysql.createConnection({
     host: "localhost",
-    user: "regienald",
-    password: "121796-Almoite",
+    user: "root",
+    password: "",
     database: "kizendb",
 });
 
