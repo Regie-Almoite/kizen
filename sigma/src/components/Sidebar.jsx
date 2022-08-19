@@ -18,20 +18,30 @@ const Sidebar = () => {
     };
 
     return (
-        <div className="bg-[#fffffe] rounded-md m-4">
+        <div className="bg-[#fffffe] rounded-md m-4 p-4">
             <div>
                 <img src={logo} alt="kizen Logo" />
             </div>
-            <div>
-                <Link to="/adminDashboard">
+            <div className="flex flex-col my-4">
+                <Link
+                    to="/adminDashboard"
+                    className="flex text-2xl md:text-3xl"
+                >
                     <MdOutlineDashboardCustomize size={30} />
                     <span>Dashboard</span>
                 </Link>
-                <Link to={`/profile/${loginStatus.user_id}`}>
+                <Link
+                    to={`/profile/${loginStatus.user.user_id}`}
+                    className="flex text-2xl md:text-3xl"
+                >
                     <CgProfile size={30} />
                     <span>Profile</span>
                 </Link>
-                <Link to="/" onClick={logout}>
+                <Link
+                    to="/"
+                    onClick={logout}
+                    className="flex text-2xl md:text-3xl"
+                >
                     <BiLogOut size={30} />
                     <span>Logout</span>
                 </Link>

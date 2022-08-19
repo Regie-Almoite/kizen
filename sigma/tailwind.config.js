@@ -4,7 +4,7 @@ module.exports = {
     theme: {
         extend: {
             boxShadow: {
-                md: "0 0 10px 0 rgba(0, 0, 0, 0.3)",
+                md: "0 0 15px 0 rgba(0, 0, 0, 1)",
             },
             animation: {
                 pulse: "pulse 0.6s cubic-bezier(0.4, 0, 0.6, 1) infinite",

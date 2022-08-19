@@ -5,11 +5,14 @@ import AdminDashboard from "./pages/AdminDashboard";
 import Dashboard from "./pages/Dashboard";
 import PageNotFound from "./pages/PageNotFound";
 import Profile from "./pages/Profile";
+import Machine from "./pages/Machine";
 
 export const AppContext = createContext();
 
 function App() {
-    const [loginStatus, setLoginStatus] = useState({});
+    const [loginStatus, setLoginStatus] = useState({
+        user: { user_id: 2, role_id: 2 },
+    });
     console.log(loginStatus);
     return (
         <div>
@@ -25,7 +28,10 @@ function App() {
                         <Route path="/" element={<Dashboard />} />
 
                         <Route path="/profile/:userId" element={<Profile />} />
-
+                        <Route
+                            path="/machine/:machineId"
+                            element={<Machine />}
+                        />
                         <Route path="*" element={<PageNotFound />} />
                     </Routes>
                 </Router>
