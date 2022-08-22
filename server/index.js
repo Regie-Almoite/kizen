@@ -88,7 +88,6 @@ app.post("/login", async (req, res) => {
 });
 
 app.post("/logout", (req, res) => {
-    console.log("Here");
     req.session.destroy();
     res.send({ loggedIn: false });
 });
@@ -116,6 +115,7 @@ app.post("/register", (req, res) => {
     });
 });
 
+//get roles data
 app.get("/getRoles", (req, res) => {
     const sql = "SELECT * FROM roles";
     db.query(sql, (err, result) => {
@@ -125,12 +125,78 @@ app.get("/getRoles", (req, res) => {
     });
 });
 
+//get all machines
 app.get("/machines", (req, res) => {
     const sql =
         "SELECT * FROM machines RIGHT JOIN status ON machines.status_id = status.status_id";
     db.query(sql, (err, result) => {
         if (err) console.log(err);
         res.send(result);
+    });
+});
+
+//get machine with specified machine id
+app.get("/machine/:id", async (req, res) => {
+    const machine_id = req.params.id;
+    const sql =
+        "SELECT * FROM machines RIGHT JOIN status ON machines.status_id = status.status_id WHERE machine_id = ?";
+
+    await db.query(sql, machine_id, (err, result) => {
+        res.send(result);
+    });
+});
+
+//get status data
+app.get("/status", async (req, res) => {
+    const sql = "SELECT * FROM status";
+    await db.query(sql, (err, result) => {
+        res.send(result);
+    });
+});
+
+//get errors data
+app.get("/errors", async (req, res) => {
+    const sql = "SELECT * FROM errors";
+    await db.query(sql, (err, result) => {
+        res.send(result);
+    });
+});
+
+//update name of user
+app.put("/updateName/:id", async (req, res) => {
+    const id = req.params.id;
+    const first_name = req.body.first_name;
+    const last_name = req.body.last_name;
+    const sql =
+        "UPDATE users SET first_name = ?, last_name = ?, updated_at = now() WHERE user_id = ?";
+    await db.query(sql, [first_name, last_name, id], (err, result) => {
+        if (err) console.log(err);
+        console.log(result);
+    });
+
+    await db.query(
+        "SELECT user_id, first_name, last_name, role_id FROM users WHERE user_id = ?",
+        [id],
+        (err, result) => {
+            req.session.user = result;
+            res.send(result);
+        }
+    );
+});
+
+//update user password
+app.put("/updatePassword/:id", (req, res) => {
+    const password = req.body.password;
+    const id = req.params.id;
+    const sql = "UPDATE users SET password = ? WHERE user_id = ?";
+    const saltRounds = 10;
+
+    bcrypt.hash(password, saltRounds, (err, hash) => {
+        db.query(sql, [hash, id], (err, result) => {
+            if (err) console.log(err);
+            console.log(result);
+            res.send(result);
+        });
     });
 });
 

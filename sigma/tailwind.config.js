@@ -8,11 +8,16 @@ module.exports = {
             },
             animation: {
                 pulse: "pulse 0.6s cubic-bezier(0.4, 0, 0.6, 1) infinite",
+                appear: "show 0.4s ease forwards",
             },
             keyframes: {
                 pulse: {
                     "0%, 100%": { opacity: "1" },
                     "50%": { opacity: ".6" },
+                },
+                show: {
+                    "0%": { opacity: "0" },
+                    "100%": { opcaity: "1" },
                 },
             },
         },

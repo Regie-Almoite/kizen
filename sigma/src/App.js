@@ -6,12 +6,19 @@ import Dashboard from "./pages/Dashboard";
 import PageNotFound from "./pages/PageNotFound";
 import Profile from "./pages/Profile";
 import Machine from "./pages/Machine";
+import StatusHistory from "./pages/StatusHistory";
 
 export const AppContext = createContext();
 
 function App() {
     const [loginStatus, setLoginStatus] = useState({
-        user: { user_id: 2, role_id: 2 },
+        loggedIn: true,
+        user: {
+            user_id: 1,
+            first_name: "Regienald",
+            last_name: "Almoite",
+            role_id: 1,
+        },
     });
     console.log(loginStatus);
     return (
@@ -32,6 +39,7 @@ function App() {
                             path="/machine/:machineId"
                             element={<Machine />}
                         />
+                        <Route path="/history" element={<StatusHistory />} />
                         <Route path="*" element={<PageNotFound />} />
                     </Routes>
                 </Router>
