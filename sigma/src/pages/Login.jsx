@@ -1,4 +1,4 @@
-import React, { useContext, useReducer, useEffect } from "react";
+import React, { useState, useContext, useReducer, useEffect } from "react";
 import { AppContext } from "../App";
 import axios from "axios";
 import globe from "../assets/images/globe.jpg";
@@ -82,7 +82,7 @@ const Login = () => {
         dispatch({ type: "beforeLogin" });
 
         axios
-            .post("http://localhost:3001/login", {
+            .post("http://localhost:3001/users/login", {
                 email: state.email,
                 password: state.password,
             })
@@ -123,35 +123,7 @@ const Login = () => {
             });
     };
 
-    useEffect(() => {
-        // axios.get("http://localhost:3001/login").then((res) => {
-        //     if (res.data.loggedIn) {
-        //         setLoginStatus({
-        //             loggedIn: true,
-        //             user: {
-        //                 user_id: res.data.user[0].user_id,
-        //                 first_name: res.data.user[0].first_name,
-        //                 last_name: res.data.user[0].last_name,
-        //                 role_id: res.data.user[0].role_id,
-        //             },
-        //         });
-        //     } else {
-        //         setLoginStatus(res.data);
-        //     }
-        // });
-        // if (!loginStatus.loggedIn) {
-        //     navigate("/");
-        // } else if (loginStatus.user?.role_id === 1) {
-        //     navigate("/adminDashboard");
-        // } else {
-        //     navigate("dashboard");
-        // }
-    }, [
-        loginStatus.loggedIn,
-        loginStatus.user?.role_id,
-        navigate,
-        setLoginStatus,
-    ]);
+    useEffect(() => {}, []);
 
     return (
         <div className={style.wrapper}>

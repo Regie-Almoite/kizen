@@ -9,30 +9,28 @@ import Machine from "./pages/Machine";
 import StatusHistory from "./pages/StatusHistory";
 
 export const AppContext = createContext();
+export const HistoryContext = createContext();
 
 function App() {
-    const [loginStatus, setLoginStatus] = useState({
-        loggedIn: true,
-        user: {
-            user_id: 1,
-            first_name: "Regienald",
-            last_name: "Almoite",
-            role_id: 1,
-        },
-    });
-    console.log(loginStatus);
+    const [loginStatus, setLoginStatus] = useState({});
+
     return (
-        <div>
-            <AppContext.Provider value={{ loginStatus, setLoginStatus }}>
+        <div className="max-h-screen overflow-hidden">
+            <AppContext.Provider
+                value={{
+                    loginStatus,
+                    setLoginStatus,
+                }}
+            >
                 <Router>
                     <Routes>
-                        {/* <Route path="/" element={<Login />} />
+                        <Route path="/" element={<Login />} />
 
                         <Route
                             path="/adminDashboard"
                             element={<AdminDashboard />}
-                        /> */}
-                        <Route path="/" element={<Dashboard />} />
+                        />
+                        <Route path="/dashboard" element={<Dashboard />} />
 
                         <Route path="/profile/:userId" element={<Profile />} />
                         <Route

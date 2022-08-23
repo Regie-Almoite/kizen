@@ -22,45 +22,22 @@ const Dashboard = () => {
     const navigate = useNavigate();
     const [machines, setMachines] = useState([]);
 
-    useEffect(() => {
-        axios.get("http://localhost:3001/machines").then((res) => {
+    const getMachines = async () => {
+        await axios.get("http://localhost:3001/machines").then((res) => {
             setMachines(res.data);
-            console.log(res.data);
         });
-        // axios.get("http://localhost:3001/login").then((res) => {
-        //     if (res.data.loggedIn) {
-        //         setLoginStatus({
-        //             loggedIn: true,
-        //             user: {
-        //                 user_id: res.data.user[0].user_id,
-        //                 first_name: res.data.user[0].first_name,
-        //                 last_name: res.data.user[0].last_name,
-        //                 role_id: res.data.user[0].role_id,
-        //             },
-        //         });
-        //     } else {
-        //         setLoginStatus(res.data);
-        //     }
-        // });
-        // if (!loginStatus.loggedIn) {
-        //     navigate("/");
-        // } else if (loginStatus.user?.role_id === 1) {
-        //     navigate("/adminDashboard");
-        // } else {
-        //     navigate("/dashboard");
-        // }
-    }, [
-        loginStatus.loggedIn,
-        loginStatus.user?.role_id,
-        navigate,
-        setLoginStatus,
-    ]);
+    };
+    useEffect(() => {}, []);
 
     return (
-        <div className="flex bg-[#16161a] m-4 p-4 h-screen">
-            <Sidebar />
-            <div className="p-4 m-4 max-h-screen grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-[20px] w-full bg-[#fffffe] overflow-auto rounded-md">
-                {loginStatus.user.role_id === 2
+        <div className="flex bg-[#16161a] p-2 h-screen">
+            {console.log(loginStatus)}
+            <Sidebar
+                loginStatus={loginStatus}
+                setLoginStatus={setLoginStatus}
+            />
+            <div className="p-2 m-2 max-h-screen grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-5 w-full bg-[#fffffe] overflow-auto rounded-md">
+                {loginStatus.user?.role_id === 2
                     ? machines.map((machine) => {
                           return (
                               <div
@@ -134,15 +111,15 @@ const Dashboard = () => {
                               >
                                   <div className="w-full p-4">
                                       <div className="my-4">
-                                          <p className="text-[#fffffe]">
+                                          <p className="text-[#fffffe] text-2xl">
                                               EQUIPMENT NO:
                                           </p>
-                                          <p className="text-[#94a1b2] pl-4">
+                                          <p className="text-[#94a1b2] pl-4 text-2xl">
                                               MT-{machine.machine_id}
                                           </p>
                                       </div>
                                       <div className="my-4">
-                                          <p className="text-[#fffffe]">
+                                          <p className="text-[#fffffe] text-2xl">
                                               STATUS:
                                           </p>
                                           <div
@@ -161,7 +138,7 @@ const Dashboard = () => {
                                                       : style.id
                                               }
                                           >
-                                              <p className=" pl-4">
+                                              <p className=" pl-4 text-2xl">
                                                   {machine.status_name}. . .
                                               </p>
                                           </div>

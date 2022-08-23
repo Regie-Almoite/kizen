@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState, useContext } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 import { AppContext } from "../App";
 
@@ -21,22 +21,24 @@ const Machine = () => {
     const { machineId } = useParams();
     const { loginStatus, setLoginStatus } = useContext(AppContext);
     const [machine, setMachine] = useState({});
+    const [machineUpdate, setMachineUpdate] = useState({});
     const [status, setStatus] = useState([]);
     const [errors, setErrors] = useState([]);
     const [comment, setComment] = useState("");
-    const [newStatus, setNewStatus] = useState(null);
-    const [error, setError] = useState(1);
+    const [newStatus, setNewStatus] = useState("");
+    const [error, setError] = useState(6);
     const [product, setProduct] = useState("");
+    const navigate = useNavigate();
 
     const getMachine = async () => {
         try {
             const machineData = await axios
-                .get(`http://localhost:3001/machine/${machineId}`)
+                .get(`http://localhost:3001/machines/${machineId}`)
                 .then((res) => {
                     console.log(res.data[0]);
                     return res.data[0];
                 });
-
+            setNewStatus(machineData.status_id);
             setMachine(machineData);
         } catch (err) {
             console.log(err);
@@ -69,125 +71,182 @@ const Machine = () => {
         }
     };
 
+    const updateMachineHandler = async (e) => {
+        e.preventDefault();
+        console.log(newStatus, error, product, comment);
+        try {
+            let updateMachineStatus = await axios
+                .put(`http://localhost:3001/machines/${machine?.machine_id}`, {
+                    newStatus: newStatus,
+                })
+                .then((res) => {
+                    setMachineUpdate({
+                        ...machine,
+                        status_id: newStatus,
+                    });
+                    setMachine({ ...machine, status_id: newStatus });
+                    console.log(res.data);
+                });
+
+            let addRecord = await axios
+                .post("http://localhost:3001/records", {
+                    error_id: error,
+                    status_id: newStatus,
+                    comment: comment,
+                    user_id: loginStatus.user?.user_id,
+                    machine_id: machine.machine_id,
+                    product: product,
+                })
+                .then((res) => {
+                    console.log(res);
+                });
+        } catch (err) {
+            console.log(err);
+        }
+    };
+
+    useEffect(() => {}, []);
+
     useEffect(() => {
         getMachine();
         getStatus();
         getErrors();
-    }, []);
+    }, [machineUpdate]);
 
     return (
-        <div className="flex bg-[#16161a] p-4 h-screen">
-            <Sidebar />
-            <div className="m-4 p-4 bg-[#fffffe] rounded-md w-full">
-                <div>
-                    <div
-                        className={
-                            machine.status_code === "PR"
-                                ? style.divPr
-                                : machine.status_code === "SU"
-                                ? style.divSu
-                                : machine.status_code === "PD"
-                                ? style.divPd
-                                : machine.status_code === "ED"
-                                ? style.divEd
-                                : style.divId
-                        }
-                    >
-                        <div className="w-full p-4">
-                            <div className="my-4">
-                                <p className="text-[#fffffe]">EQUIPMENT NO:</p>
-                                <p className="text-[#94a1b2] pl-4">
-                                    MT-{machine.machine_id}
+        <div className="flex bg-[#16161a] p-2 h-screen">
+            <Sidebar
+                loginStatus={loginStatus}
+                setLoginStatus={setLoginStatus}
+            />
+            <div className="m-2 p-2 bg-[#fffffe] rounded-md w-full">
+                <div
+                    className={
+                        machine.status_code === "PR"
+                            ? style.divPr
+                            : machine.status_code === "SU"
+                            ? style.divSu
+                            : machine.status_code === "PD"
+                            ? style.divPd
+                            : machine.status_code === "ED"
+                            ? style.divEd
+                            : style.divId
+                    }
+                >
+                    <div className="w-full p-4">
+                        <div className="my-2">
+                            <p className="text-[#fffffe] text-2xl">
+                                EQUIPMENT NO:
+                            </p>
+                            <p className="text-[#94a1b2] pl-4 text-2xl">
+                                MT-{machine.machine_id}
+                            </p>
+                        </div>
+                        <div className="my-2">
+                            <p className="text-[#fffffe] text-2xl">STATUS:</p>
+                            <div
+                                className={
+                                    machine.status_code === "PR"
+                                        ? style.pr
+                                        : machine.status_code === "SU"
+                                        ? style.su
+                                        : machine.status_code === "PD"
+                                        ? style.pd
+                                        : machine.status_code === "ED"
+                                        ? style.ed
+                                        : style.id
+                                }
+                            >
+                                <p className=" pl-4 text-2xl">
+                                    {machine.status_name}. . .
                                 </p>
-                            </div>
-                            <div className="my-4">
-                                <p className="text-[#fffffe]">STATUS:</p>
-                                <div
-                                    className={
-                                        machine.status_code === "PR"
-                                            ? style.pr
-                                            : machine.status_code === "SU"
-                                            ? style.su
-                                            : machine.status_code === "PD"
-                                            ? style.pd
-                                            : machine.status_code === "ED"
-                                            ? style.ed
-                                            : style.id
-                                    }
-                                >
-                                    <p className=" pl-4">
-                                        {machine.status_name}. . .
-                                    </p>
-                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <form>
-                    <div>
-                        <span>Operator ID</span>
-                        <input
-                            type="number"
-                            disabled
-                            value={loginStatus.user?.user_id}
-                        />
-                    </div>
-                    <div>
-                        <span>Status</span>
-                        <select
-                            value={machine.status_id}
-                            onChange={(e) => {
-                                setNewStatus(e.target.value);
-                            }}
-                        >
-                            {status.map((item) => {
-                                return (
-                                    <option
-                                        key={item.status_id}
-                                        value={item.status_id}
-                                    >
-                                        {item.status_name}
-                                    </option>
-                                );
-                            })}
-                        </select>
-                    </div>
-                    <div>
-                        <span>Error</span>
-                        <select
-                            value={error}
-                            onChange={(e) => setError(e.target.value)}
-                        >
-                            {errors.map((error) => {
-                                return (
-                                    <option
-                                        key={error.error_id}
-                                        value={error.error_id}
-                                    >
-                                        {error.error_description}
-                                    </option>
-                                );
-                            })}
-                        </select>
-                    </div>
-                    <div>
-                        <span>Product</span>
-                        <input
-                            type="text"
-                            value={product}
-                            onChange={(e) => setProduct(e.target.value)}
-                        />
-                    </div>
-                    <div>
-                        <span>Comment</span>
-                        <textarea
-                            value={comment}
-                            onChange={(e) => {
-                                setComment(e.target.value);
-                            }}
-                        ></textarea>
-                    </div>
-                </form>
+                <div className="my-2 p-2">
+                    <form
+                        className="max-w-[50%] mx-auto h-full"
+                        onSubmit={updateMachineHandler}
+                    >
+                        <div className="flex flex-col my-2">
+                            <span className="text-xl md:text-2xl">
+                                Operator ID
+                            </span>
+                            <input
+                                className="p-2 text-xl md:text-2xl"
+                                type="number"
+                                disabled
+                                value={loginStatus.user?.user_id}
+                            />
+                        </div>
+                        <div className="flex flex-col my-2">
+                            <span className="text-xl md:text-2xl">Status</span>
+                            <select
+                                className="p-2 border border-black text-xl md:text-2xl"
+                                value={newStatus}
+                                onChange={(e) => {
+                                    setNewStatus(e.target.value);
+                                }}
+                            >
+                                {status.map((item) => {
+                                    return (
+                                        <option
+                                            key={item.status_id}
+                                            value={item.status_id}
+                                        >
+                                            {item.status_name}
+                                        </option>
+                                    );
+                                })}
+                            </select>
+                        </div>
+                        <div className="flex flex-col my-2">
+                            <span className=" mr-4 text-xl md:text-2xl">
+                                Error
+                            </span>
+                            <select
+                                className="p-2 border border-black text-xl md:text-2xl"
+                                value={error}
+                                onChange={(e) => setError(e.target.value)}
+                            >
+                                {errors.map((error) => {
+                                    return (
+                                        <option
+                                            key={error.error_id}
+                                            value={error.error_id}
+                                        >
+                                            {error.error_description}
+                                        </option>
+                                    );
+                                })}
+                            </select>
+                        </div>
+                        <div className="flex flex-col my-2">
+                            <span className="text-xl md:text-2xl">Product</span>
+                            <input
+                                className="p-2 border border-black text-xl md:text-2xl"
+                                type="text"
+                                value={product}
+                                onChange={(e) => setProduct(e.target.value)}
+                            />
+                        </div>
+                        <div className="flex flex-col my-2">
+                            <span className="text-xl md:text-2xl">Comment</span>
+                            <textarea
+                                className="p-2 border border-black text-xl md:text-2xl"
+                                value={comment}
+                                rows="3"
+                                onChange={(e) => {
+                                    setComment(e.target.value);
+                                }}
+                            ></textarea>
+                        </div>
+                        <button className="py-2 px-4 text-xl md:text-2xl text-[#fffffe] cursor-pointer bg-[#7f5af0] hover:bg-[#9B80EC] rounded-md ">
+                            Update
+                        </button>
+                    </form>
+                </div>
             </div>
         </div>
     );
