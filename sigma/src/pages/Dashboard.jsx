@@ -8,7 +8,7 @@ const style = {
     pr: `bg-clip-text text-transparent bg-green-500 animate-pulse`,
     su: `bg-clip-text text-transparent bg-yellow-500 animate-pulse`,
     pd: `bg-clip-text text-transparent bg-rose-500 `,
-    ed: `bg-clip-text text-transparent bg-blue-500 animate-pulse`,
+    ed: `bg-clip-text text-transparent bg-blue-500`,
     id: `bg-clip-text text-transparent bg-gray-500 animate-pulse`,
     divPr: `relative bg-[#16161a] flex items-center border-4 border-green-500 hover:scale-[1.03] hover:shadow-md hover:shadow-green-500 rounded-md cursor-pointer`,
     divSu: `relative bg-[#16161a] flex items-center border-4 border-yellow-500 hover:scale-[1.03] hover:shadow-md hover:shadow-yellow-500 rounded-md cursor-pointer`,
@@ -121,7 +121,7 @@ const Dashboard = () => {
                 setLoginStatus={setLoginStatus}
             />
             <div className="bg-[#fffffe] p-2 m-2 overflow-auto relative rounded-md w-full">
-                <div className="sticky top-0 flex items-center p-2">
+                {/* <div className="sticky top-0 flex items-center p-2">
                     <input
                         className="w-full p-2 text-xl md:text-2xl rounded-tl-md rounded-bl-md form-input "
                         type="number"
@@ -143,7 +143,7 @@ const Dashboard = () => {
                         <option value="ed">Equipment Down</option>
                         <option value="id">Idle</option>
                     </select>
-                </div>
+                </div> */}
                 <div className="p-2 max-h-screen grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-5 w-full overflow-auto">
                     {machines
                         .filter((machine) => {

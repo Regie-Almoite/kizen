@@ -12,14 +12,7 @@ export const AppContext = createContext();
 export const HistoryContext = createContext();
 
 function App() {
-    const [loginStatus, setLoginStatus] = useState({
-        user: {
-            user_id: 1,
-            first_name: "Regienald",
-            last_name: "Almoite",
-            role_id: 1,
-        },
-    });
+    const [loginStatus, setLoginStatus] = useState({});
 
     return (
         <div className="max-h-screen overflow-hidden">
