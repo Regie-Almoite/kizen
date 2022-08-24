@@ -144,7 +144,7 @@ const Profile = () => {
                                     First Name:
                                 </h2>
                                 <p
-                                    className="text-xl md:text-2xl p-2 rounded-md border-[#010101]"
+                                    className="text-xl md:text-2xl p-2 rounded-md border-none"
                                     type="text"
                                 >
                                     {loginStatus.user?.first_name}
@@ -155,7 +155,7 @@ const Profile = () => {
                                     Last Name:
                                 </h2>
                                 <p
-                                    className="text-xl md:text-2xl p-2 rounded-md border-[#010101]"
+                                    className="text-xl md:text-2xl p-2 rounded-md border-none"
                                     type="text"
                                 >
                                     {loginStatus.user?.last_name}

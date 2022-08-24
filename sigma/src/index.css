@@ -8,17 +8,28 @@
     body {
         @apply font-[Roboto];
     }
+
     input {
-        @apply border focus:outline-none rounded;
+        @apply border focus:outline-none border-[#010101] rounded-md text-xl md:text-2xl;
     }
     select {
-        @apply focus:outline-none rounded;
+        @apply focus:outline-none rounded-md text-xl md:text-2xl;
     }
+
     table {
         @apply w-full text-xl md:text-2xl text-center;
     }
+
     th,
     td {
         @apply p-2 border;
+    }
+}
+
+@layer utilities {
+    input[type="number"]::-webkit-inner-spin-button,
+    input[type="number"]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
     }
 }

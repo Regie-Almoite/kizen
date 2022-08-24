@@ -21,6 +21,8 @@ const Dashboard = () => {
     const { loginStatus, setLoginStatus } = useContext(AppContext);
     const navigate = useNavigate();
     const [machines, setMachines] = useState([]);
+    const [searchId, setSearchId] = useState("");
+    const [filterStatus, setFilterStatus] = useState("");
     // const [prCount, setPrCount] = useState(0);
     // const [suCount, setSuCount] = useState(0);
     // const [pdCount, setPdCount] = useState(0);
@@ -118,215 +120,149 @@ const Dashboard = () => {
                 loginStatus={loginStatus}
                 setLoginStatus={setLoginStatus}
             />
-            <div className="p-2 m-2 max-h-screen grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-5 w-full bg-[#fffffe] overflow-auto rounded-md">
-                {machines.map((machine) => {
-                    return loginStatus.user?.role_id === 2 ? (
-                        <div
-                            key={machine.machine_id}
-                            className={
-                                machine.status_code === "PR"
-                                    ? style.divPr
-                                    : machine.status_code === "SU"
-                                    ? style.divSu
-                                    : machine.status_code === "PD"
-                                    ? style.divPd
-                                    : machine.status_code === "ED"
-                                    ? style.divEd
-                                    : style.divId
-                            }
-                        >
-                            <div className="w-full p-4">
-                                <div className="my-4">
-                                    <p className="text-[#fffffe]">
-                                        EQUIPMENT NO:
-                                    </p>
-                                    <p className="text-[#94a1b2] pl-4">
-                                        MT-{machine.machine_id}
-                                    </p>
-                                </div>
-                                <div className="my-4">
-                                    <p className="text-[#fffffe]">STATUS:</p>
-                                    <div
-                                        className={
-                                            machine.status_code === "PR"
-                                                ? style.pr
-                                                : machine.status_code === "SU"
-                                                ? style.su
-                                                : machine.status_code === "PD"
-                                                ? style.pd
-                                                : machine.status_code === "ED"
-                                                ? style.ed
-                                                : style.id
-                                        }
-                                    >
-                                        <p className=" pl-4">
-                                            {machine.status_name}. . .
-                                        </p>
+            <div className="bg-[#fffffe] p-2 m-2 overflow-auto relative rounded-md w-full">
+                <div className="sticky top-0 flex items-center p-2">
+                    <input
+                        className="w-full p-2 text-xl md:text-2xl rounded-tl-md rounded-bl-md form-input "
+                        type="number"
+                        placeholder="Search by machine ID"
+                        value={searchId}
+                        onChange={(e) => setSearchId(e.target.value)}
+                    />
+                    <select
+                        className="w-[400px] p-2 text-xl md:text-2xl rounded-none form-select rounded-tr-md rounded-br-md"
+                        name="filter"
+                        id="filter"
+                        value={filterStatus}
+                        onChange={(e) => setFilterStatus(e.target.value)}
+                    >
+                        <option value="">Filter by status</option>
+                        <option value="pr">Production Run</option>
+                        <option value="su">Machine Setup</option>
+                        <option value="pd">Production Down</option>
+                        <option value="ed">Equipment Down</option>
+                        <option value="id">Idle</option>
+                    </select>
+                </div>
+                <div className="p-2 max-h-screen grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-5 w-full overflow-auto">
+                    {machines
+                        .filter((machine) => {
+                            return (
+                                machine.machine_id
+                                    .toString()
+                                    .includes(searchId) &&
+                                machine.status_code
+                                    .toLowerCase()
+                                    .includes(filterStatus)
+                            );
+                        })
+                        .map((machine) => {
+                            return loginStatus.user?.role_id === 2 ? (
+                                <div
+                                    key={machine.machine_id}
+                                    className={
+                                        machine.status_code === "PR"
+                                            ? style.divPr
+                                            : machine.status_code === "SU"
+                                            ? style.divSu
+                                            : machine.status_code === "PD"
+                                            ? style.divPd
+                                            : machine.status_code === "ED"
+                                            ? style.divEd
+                                            : style.divId
+                                    }
+                                >
+                                    <div className="w-full p-4">
+                                        <div className="my-4">
+                                            <p className="text-[#fffffe]">
+                                                EQUIPMENT NO:
+                                            </p>
+                                            <p className="text-[#94a1b2] pl-4">
+                                                MT-{machine.machine_id}
+                                            </p>
+                                        </div>
+                                        <div className="my-4">
+                                            <p className="text-[#fffffe]">
+                                                STATUS:
+                                            </p>
+                                            <div
+                                                className={
+                                                    machine.status_code === "PR"
+                                                        ? style.pr
+                                                        : machine.status_code ===
+                                                          "SU"
+                                                        ? style.su
+                                                        : machine.status_code ===
+                                                          "PD"
+                                                        ? style.pd
+                                                        : machine.status_code ===
+                                                          "ED"
+                                                        ? style.ed
+                                                        : style.id
+                                                }
+                                            >
+                                                <p className=" pl-4">
+                                                    {machine.status_name}. . .
+                                                </p>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                    ) : (
-                        <Link
-                            to={`/machine/${machine.machine_id}`}
-                            key={machine.machine_id}
-                            className={
-                                machine.status_code === "PR"
-                                    ? style.divPr
-                                    : machine.status_code === "SU"
-                                    ? style.divSu
-                                    : machine.status_code === "PD"
-                                    ? style.divPd
-                                    : machine.status_code === "ED"
-                                    ? style.divEd
-                                    : style.divId
-                            }
-                        >
-                            <div className="w-full p-4">
-                                <div className="my-4">
-                                    <p className="text-[#fffffe] text-2xl">
-                                        EQUIPMENT NO:
-                                    </p>
-                                    <p className="text-[#94a1b2] pl-4 text-2xl">
-                                        MT-{machine.machine_id}
-                                    </p>
-                                </div>
-                                <div className="my-4">
-                                    <p className="text-[#fffffe] text-2xl">
-                                        STATUS:
-                                    </p>
-                                    <div
-                                        className={
-                                            machine.status_code === "PR"
-                                                ? style.pr
-                                                : machine.status_code === "SU"
-                                                ? style.su
-                                                : machine.status_code === "PD"
-                                                ? style.pd
-                                                : machine.status_code === "ED"
-                                                ? style.ed
-                                                : style.id
-                                        }
-                                    >
-                                        <p className=" pl-4 text-2xl">
-                                            {machine.status_name}. . .
-                                        </p>
+                            ) : (
+                                <Link
+                                    to={`/machine/${machine.machine_id}`}
+                                    key={machine.machine_id}
+                                    className={
+                                        machine.status_code === "PR"
+                                            ? style.divPr
+                                            : machine.status_code === "SU"
+                                            ? style.divSu
+                                            : machine.status_code === "PD"
+                                            ? style.divPd
+                                            : machine.status_code === "ED"
+                                            ? style.divEd
+                                            : style.divId
+                                    }
+                                >
+                                    <div className="w-full p-4">
+                                        <div className="my-4">
+                                            <p className="text-[#fffffe] text-2xl">
+                                                EQUIPMENT NO:
+                                            </p>
+                                            <p className="text-[#94a1b2] pl-4 text-2xl">
+                                                MT-{machine.machine_id}
+                                            </p>
+                                        </div>
+                                        <div className="my-4">
+                                            <p className="text-[#fffffe] text-2xl">
+                                                STATUS:
+                                            </p>
+                                            <div
+                                                className={
+                                                    machine.status_code === "PR"
+                                                        ? style.pr
+                                                        : machine.status_code ===
+                                                          "SU"
+                                                        ? style.su
+                                                        : machine.status_code ===
+                                                          "PD"
+                                                        ? style.pd
+                                                        : machine.status_code ===
+                                                          "ED"
+                                                        ? style.ed
+                                                        : style.id
+                                                }
+                                            >
+                                                <p className=" pl-4 text-2xl">
+                                                    {machine.status_name}. . .
+                                                </p>
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
-                            </div>
-                        </Link>
-                    );
-                })}
-                {/* {loginStatus.user?.role_id === 2
-                    ? machines.map((machine) => {
-                          return (
-                              <div
-                                  key={machine.machine_id}
-                                  className={
-                                      machine.status_code === "PR"
-                                          ? style.divPr
-                                          : machine.status_code === "SU"
-                                          ? style.divSu
-                                          : machine.status_code === "PD"
-                                          ? style.divPd
-                                          : machine.status_code === "ED"
-                                          ? style.divEd
-                                          : style.divId
-                                  }
-                              >
-                                  <div className="w-full p-4">
-                                      <div className="my-4">
-                                          <p className="text-[#fffffe]">
-                                              EQUIPMENT NO:
-                                          </p>
-                                          <p className="text-[#94a1b2] pl-4">
-                                              MT-{machine.machine_id}
-                                          </p>
-                                      </div>
-                                      <div className="my-4">
-                                          <p className="text-[#fffffe]">
-                                              STATUS:
-                                          </p>
-                                          <div
-                                              className={
-                                                  machine.status_code === "PR"
-                                                      ? style.pr
-                                                      : machine.status_code ===
-                                                        "SU"
-                                                      ? style.su
-                                                      : machine.status_code ===
-                                                        "PD"
-                                                      ? style.pd
-                                                      : machine.status_code ===
-                                                        "ED"
-                                                      ? style.ed
-                                                      : style.id
-                                              }
-                                          >
-                                              <p className=" pl-4">
-                                                  {machine.status_name}. . .
-                                              </p>
-                                          </div>
-                                      </div>
-                                  </div>
-                              </div>
-                          );
-                      })
-                    : machines.map((machine) => {
-                          return (
-                              <Link
-                                  to={`/machine/${machine.machine_id}`}
-                                  key={machine.machine_id}
-                                  className={
-                                      machine.status_code === "PR"
-                                          ? style.divPr
-                                          : machine.status_code === "SU"
-                                          ? style.divSu
-                                          : machine.status_code === "PD"
-                                          ? style.divPd
-                                          : machine.status_code === "ED"
-                                          ? style.divEd
-                                          : style.divId
-                                  }
-                              >
-                                  <div className="w-full p-4">
-                                      <div className="my-4">
-                                          <p className="text-[#fffffe] text-2xl">
-                                              EQUIPMENT NO:
-                                          </p>
-                                          <p className="text-[#94a1b2] pl-4 text-2xl">
-                                              MT-{machine.machine_id}
-                                          </p>
-                                      </div>
-                                      <div className="my-4">
-                                          <p className="text-[#fffffe] text-2xl">
-                                              STATUS:
-                                          </p>
-                                          <div
-                                              className={
-                                                  machine.status_code === "PR"
-                                                      ? style.pr
-                                                      : machine.status_code ===
-                                                        "SU"
-                                                      ? style.su
-                                                      : machine.status_code ===
-                                                        "PD"
-                                                      ? style.pd
-                                                      : machine.status_code ===
-                                                        "ED"
-                                                      ? style.ed
-                                                      : style.id
-                                              }
-                                          >
-                                              <p className=" pl-4 text-2xl">
-                                                  {machine.status_name}. . .
-                                              </p>
-                                          </div>
-                                      </div>
-                                  </div>
-                              </Link>
-                          );
-                      })} */}
+                                </Link>
+                            );
+                        })}
+                </div>
             </div>
         </div>
     );

@@ -8,6 +8,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
+import { BsSearch } from "react-icons/bs";
 import Sidebar from "../components/Sidebar";
 
 const schema = yup
@@ -145,14 +146,17 @@ const AdminDashboard = () => {
                 setLoginStatus={setLoginStatus}
             />
             <div className="flex gap-2 bg-[#fffffe] p-2 m-2 rounded-md w-full relative">
-                <div className="w-full">
-                    <form onSubmit={handleSubmit(registerHandler)}>
+                <div className="w-[50%]">
+                    <form
+                        onSubmit={handleSubmit(registerHandler)}
+                        className="w-full"
+                    >
                         <div className="flex flex-col my-2">
                             <span className="text-xl md:text-2xl">
                                 First Name
                             </span>
                             <input
-                                className="text-xl md:text-2xl border border-black p-2"
+                                className="text-xl md:text-2xl border p-2 rounded-md"
                                 type="text"
                                 // value={firstName}
                                 // onChange={(e) => setFirstName(e.target.value)}
@@ -167,7 +171,7 @@ const AdminDashboard = () => {
                                 Last Name
                             </span>
                             <input
-                                className="text-xl md:text-2xl border border-black p-2"
+                                className="text-xl md:text-2xl border p-2 rounded-md"
                                 type="text"
                                 // value={lastName}
                                 // onChange={(e) => setLastName(e.target.value)}
@@ -180,7 +184,7 @@ const AdminDashboard = () => {
                         <div className="flex flex-col my-2">
                             <span className="text-xl md:text-2xl">Email</span>
                             <input
-                                className="text-xl md:text-2xl border border-black p-2"
+                                className="text-xl md:text-2xl border p-2 rounded-md"
                                 type="email"
                                 // value={email}
                                 // onChange={(e) => setEmail(e.target.value)}
@@ -198,7 +202,7 @@ const AdminDashboard = () => {
                         <div className="flex flex-col my-2">
                             <span className="text-xl md:text-2xl">Role</span>
                             <select
-                                className="text-xl md:text-2xl border border-black p-2"
+                                className="text-xl md:text-2xl border border-[#010101] p-2 rounded-md "
                                 // value={role}
                                 // onChange={(e) => setRole(e.target.value)}
                                 {...register("role_id")}
@@ -225,7 +229,7 @@ const AdminDashboard = () => {
                             </span>
                             <div className="relative">
                                 <input
-                                    className="w-full text-xl md:text-2xl border border-black p-2"
+                                    className="w-full text-xl md:text-2xl border p-2 rounded-md "
                                     type={seePassword ? "text" : "password"}
                                     // value={password}
                                     // onChange={(e) => {
@@ -261,9 +265,15 @@ const AdminDashboard = () => {
                     </form>
                 </div>
                 <div className="w-full">
-                    <div>
+                    <div className="flex items-center">
+                        <div className="border p-2 border-black border-r-0 rounded-tl-md rounded-bl-md">
+                            <BsSearch
+                                size={32}
+                                className="mr-2 text-black/70"
+                            />
+                        </div>
                         <input
-                            className="text-xl md:text-2xl p-2 my-2 w-full"
+                            className="text-xl md:text-2xl p-2 my-2 w-full border-l-0 rounded-tr-md rounded-br-md"
                             type="text"
                             placeholder="Search by name"
                             value={filterName}

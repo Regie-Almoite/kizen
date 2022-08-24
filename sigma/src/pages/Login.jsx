@@ -137,6 +137,7 @@ const Login = () => {
                 });
             } else {
                 setLoginStatus(res.data);
+                navigate("/");
             }
         });
     }, []);
