@@ -39,6 +39,8 @@ const Profile = () => {
                         role_id: res.data[0].role_id,
                     },
                 });
+
+                navigate(`/profile/${userId}`);
             });
         setEdit(!edit);
     };
@@ -58,8 +60,6 @@ const Profile = () => {
 
     useEffect(() => {
         axios.get("http://localhost:3001/users/login").then((res) => {
-            console.log(JSON.stringify(loginStatus) + "loginstat");
-            console.log(JSON.stringify(res.data) + "res");
             if (res.data.loggedIn === true) {
                 setLoginStatus({
                     loggedIn: true,
@@ -70,13 +70,12 @@ const Profile = () => {
                         role_id: res.data.user[0]?.role_id,
                     },
                 });
-
                 if (userId !== res.data.user[0]?.user_id) {
                     navigate(`/profile/${res.data.user[0]?.user_id}`);
                 }
             } else {
-                console.log(res.data);
                 setLoginStatus(res.data);
+                navigate("/");
             }
         });
     }, []);

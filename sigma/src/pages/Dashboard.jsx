@@ -21,16 +21,73 @@ const Dashboard = () => {
     const { loginStatus, setLoginStatus } = useContext(AppContext);
     const navigate = useNavigate();
     const [machines, setMachines] = useState([]);
+    // const [prCount, setPrCount] = useState(0);
+    // const [suCount, setSuCount] = useState(0);
+    // const [pdCount, setPdCount] = useState(0);
+    // const [edCount, setEdCount] = useState(0);
+    // const [idCount, setIdCount] = useState(0);
+    // const [machinesCount, setMachinesCount] = useState(0);
 
     axios.defaults.withCredentials = true;
 
     const getMachines = async () => {
         await axios.get("http://localhost:3001/machines").then((res) => {
             setMachines(res.data);
+            console.log(res.data);
         });
     };
 
+    // const pr_count = async () => {
+    //     await axios
+    //         .get("http://localhost:3001/machines/statusCount/pr")
+    //         .then((res) => {
+    //             setPrCount(res.data.pr_count);
+    //         });
+    // };
+    // const su_count = async () => {
+    //     await axios
+    //         .get("http://localhost:3001/machines/statusCount/su")
+    //         .then((res) => {
+    //             setSuCount(res.data.su_count);
+    //         });
+    // };
+    // const pd_count = async () => {
+    //     await axios
+    //         .get("http://localhost:3001/machines/statusCount/pd")
+    //         .then((res) => {
+    //             setPdCount(res.data.pd_count);
+    //         });
+    // };
+    // const ed_count = async () => {
+    //     await axios
+    //         .get("http://localhost:3001/machines/statusCount/ed")
+    //         .then((res) => {
+    //             setEdCount(res.data.ed_count);
+    //         });
+    // };
+    // const id_count = async () => {
+    //     await axios
+    //         .get("http://localhost:3001/machines/statusCount/id")
+    //         .then((res) => {
+    //             setIdCount(res.data.id_count);
+    //         });
+    // };
+
+    // const machines_count = async () => {
+    //     await axios
+    //         .get("http://localhost:3001/machines/statusCount/machines_count")
+    //         .then((res) => {
+    //             setMachinesCount(res.data.machines_count);
+    //         });
+    // };
+
     useEffect(() => {
+        // pr_count();
+        // su_count();
+        // pd_count();
+        // ed_count();
+        // id_count();
+        // machines_count();
         axios.get("http://localhost:3001/users/login").then((res) => {
             console.log(res.data);
             if (res.data.loggedIn === true) {
@@ -49,6 +106,7 @@ const Dashboard = () => {
                 }
             } else {
                 setLoginStatus(res.data);
+                navigate("/");
             }
         });
         getMachines();
@@ -56,13 +114,110 @@ const Dashboard = () => {
 
     return (
         <div className="flex bg-[#16161a] p-2 h-screen">
-            {console.log(loginStatus)}
             <Sidebar
                 loginStatus={loginStatus}
                 setLoginStatus={setLoginStatus}
             />
             <div className="p-2 m-2 max-h-screen grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-5 w-full bg-[#fffffe] overflow-auto rounded-md">
-                {loginStatus.user?.role_id === 2
+                {machines.map((machine) => {
+                    return loginStatus.user?.role_id === 2 ? (
+                        <div
+                            key={machine.machine_id}
+                            className={
+                                machine.status_code === "PR"
+                                    ? style.divPr
+                                    : machine.status_code === "SU"
+                                    ? style.divSu
+                                    : machine.status_code === "PD"
+                                    ? style.divPd
+                                    : machine.status_code === "ED"
+                                    ? style.divEd
+                                    : style.divId
+                            }
+                        >
+                            <div className="w-full p-4">
+                                <div className="my-4">
+                                    <p className="text-[#fffffe]">
+                                        EQUIPMENT NO:
+                                    </p>
+                                    <p className="text-[#94a1b2] pl-4">
+                                        MT-{machine.machine_id}
+                                    </p>
+                                </div>
+                                <div className="my-4">
+                                    <p className="text-[#fffffe]">STATUS:</p>
+                                    <div
+                                        className={
+                                            machine.status_code === "PR"
+                                                ? style.pr
+                                                : machine.status_code === "SU"
+                                                ? style.su
+                                                : machine.status_code === "PD"
+                                                ? style.pd
+                                                : machine.status_code === "ED"
+                                                ? style.ed
+                                                : style.id
+                                        }
+                                    >
+                                        <p className=" pl-4">
+                                            {machine.status_name}. . .
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    ) : (
+                        <Link
+                            to={`/machine/${machine.machine_id}`}
+                            key={machine.machine_id}
+                            className={
+                                machine.status_code === "PR"
+                                    ? style.divPr
+                                    : machine.status_code === "SU"
+                                    ? style.divSu
+                                    : machine.status_code === "PD"
+                                    ? style.divPd
+                                    : machine.status_code === "ED"
+                                    ? style.divEd
+                                    : style.divId
+                            }
+                        >
+                            <div className="w-full p-4">
+                                <div className="my-4">
+                                    <p className="text-[#fffffe] text-2xl">
+                                        EQUIPMENT NO:
+                                    </p>
+                                    <p className="text-[#94a1b2] pl-4 text-2xl">
+                                        MT-{machine.machine_id}
+                                    </p>
+                                </div>
+                                <div className="my-4">
+                                    <p className="text-[#fffffe] text-2xl">
+                                        STATUS:
+                                    </p>
+                                    <div
+                                        className={
+                                            machine.status_code === "PR"
+                                                ? style.pr
+                                                : machine.status_code === "SU"
+                                                ? style.su
+                                                : machine.status_code === "PD"
+                                                ? style.pd
+                                                : machine.status_code === "ED"
+                                                ? style.ed
+                                                : style.id
+                                        }
+                                    >
+                                        <p className=" pl-4 text-2xl">
+                                            {machine.status_name}. . .
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </Link>
+                    );
+                })}
+                {/* {loginStatus.user?.role_id === 2
                     ? machines.map((machine) => {
                           return (
                               <div
@@ -171,7 +326,7 @@ const Dashboard = () => {
                                   </div>
                               </Link>
                           );
-                      })}
+                      })} */}
             </div>
         </div>
     );

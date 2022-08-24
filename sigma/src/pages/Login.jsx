@@ -17,10 +17,10 @@ const style = {
     login: `bg-slate-300 p-3 mx-3 w-full sm:w-[400px] rounded-md drop-shadow-xl
     `,
     inputDiv: `flex flex-col my-3`,
-    span: `text-2xl md:text-3xl font-bold my-2`,
-    input: `p-2 text-1xl md:text-2xl rounded`,
+    span: `text-xl md:text-2xl font-bold my-2`,
+    input: `p-2 text-xl md:text-2xl rounded`,
     btnContainer: `flex items-center`,
-    loginBtn: `bg-cyan-400 hover:bg-cyan-300 py-2 px-3 mr-3 text-2xl`,
+    loginBtn: `bg-cyan-400 hover:bg-cyan-300 py-2 px-4 mr-3 text-2xl rounded-md`,
     loading: `text-green-700 flex items-center`,
     error: `text-rose-600 my-3`,
 };

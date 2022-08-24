@@ -25,6 +25,7 @@ const StatusHistory = () => {
                 });
             } else {
                 setLoginStatus(res.data);
+                navigate("/");
             }
         });
         axios.get("http://localhost:3001/records").then((res) => {

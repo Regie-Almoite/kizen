@@ -57,7 +57,6 @@ const AdminDashboard = () => {
                     password: data.password,
                 })
                 .then((res) => {
-                    console.log(res);
                     if (res.data.error) {
                         setEmailErr(res.data.error);
                     } else {
@@ -73,8 +72,8 @@ const AdminDashboard = () => {
                                 email: res.data[res.data.length - 1].email,
                             },
                         ]);
+                        navigate("/adminDashboard");
                     }
-                    // console.log(res.data[res.data.length - 1]);
                 });
         } catch (err) {
             console.log(err);
@@ -92,6 +91,7 @@ const AdminDashboard = () => {
                         })
                     );
                 });
+            navigate("/adminDashboard");
         } catch (err) {
             console.log(err);
         }
@@ -108,7 +108,6 @@ const AdminDashboard = () => {
 
     const getUsers = async () => {
         await axios.get("http://localhost:3001/users").then((res) => {
-            console.log(res.data);
             setUsers(res.data);
         });
     };
@@ -125,12 +124,12 @@ const AdminDashboard = () => {
                         role_id: res.data.user[0]?.role_id,
                     },
                 });
-
                 if (res.data.user[0].role_id !== 1) {
                     navigate("/dashboard");
                 }
             } else {
                 setLoginStatus(res.data);
+                navigate("/");
             }
         });
     }, []);

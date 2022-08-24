@@ -21,7 +21,6 @@ const Machine = () => {
     const { machineId } = useParams();
     const { loginStatus, setLoginStatus } = useContext(AppContext);
     const [machine, setMachine] = useState({});
-    const [machineUpdate, setMachineUpdate] = useState({});
     const [status, setStatus] = useState([]);
     const [errors, setErrors] = useState([]);
     const [comment, setComment] = useState("");
@@ -29,6 +28,7 @@ const Machine = () => {
     const [error, setError] = useState(6);
     const [product, setProduct] = useState("");
     const navigate = useNavigate();
+    const [resStatus, setResStatus] = useState("");
 
     axios.defaults.withCredentials = true;
 
@@ -75,19 +75,14 @@ const Machine = () => {
 
     const updateMachineHandler = async (e) => {
         e.preventDefault();
-        console.log(newStatus, error, product, comment);
         try {
             let updateMachineStatus = await axios
                 .put(`http://localhost:3001/machines/${machine?.machine_id}`, {
                     newStatus: newStatus,
                 })
                 .then((res) => {
-                    setMachineUpdate({
-                        ...machine,
-                        status_id: newStatus,
-                    });
-                    setMachine({ ...machine, status_id: newStatus });
                     console.log(res.data);
+                    setResStatus(res.status);
                 });
 
             let addRecord = await axios
@@ -119,8 +114,16 @@ const Machine = () => {
                         role_id: res.data.user[0]?.role_id,
                     },
                 });
+                if (res.data.user[0]?.role_id === 1) {
+                    navigate("/adminDashboard");
+                } else if (res.data.user[0]?.role_id === 2) {
+                    navigate("/viewDashboard");
+                } else {
+                    navigate(`/machine/${machineId}`);
+                }
             } else {
                 setLoginStatus(res.data);
+                navigate("/");
             }
         });
     }, []);
@@ -129,7 +132,7 @@ const Machine = () => {
         getMachine();
         getStatus();
         getErrors();
-    }, [machineUpdate]);
+    }, [resStatus]);
 
     return (
         <div className="flex bg-[#16161a] p-2 h-screen">
