@@ -135,6 +135,11 @@ const Login = () => {
                         role_id: res.data.user[0]?.role_id,
                     },
                 });
+                if (res.data.user?.role_id === 1) {
+                    navigate("/adminDashboard");
+                } else {
+                    navigate("/dashboard");
+                }
             } else {
                 setLoginStatus(res.data);
                 navigate("/");
