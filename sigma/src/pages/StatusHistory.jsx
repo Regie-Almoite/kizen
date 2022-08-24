@@ -9,7 +9,24 @@ const StatusHistory = () => {
     const navigate = useNavigate();
     const [records, setRecords] = useState([]);
 
+    axios.defaults.withCredentials = true;
+
     useEffect(() => {
+        axios.get("http://localhost:3001/users/login").then((res) => {
+            if (res.data.loggedIn === true) {
+                setLoginStatus({
+                    loggedIn: true,
+                    user: {
+                        user_id: res.data.user[0]?.user_id,
+                        first_name: res.data.user[0]?.first_name,
+                        last_name: res.data.user[0]?.last_name,
+                        role_id: res.data.user[0]?.role_id,
+                    },
+                });
+            } else {
+                setLoginStatus(res.data);
+            }
+        });
         axios.get("http://localhost:3001/records").then((res) => {
             setRecords(res.data);
         });
@@ -39,8 +56,8 @@ const StatusHistory = () => {
                             const hours = date.getHours();
                             const minutes = date.getMinutes();
                             const seconds = date.getSeconds();
-                            const month = date.getMonth();
-                            const day = date.getDate() + 1;
+                            const month = date.getMonth() + 1;
+                            const day = date.getDate();
                             const year = date.getFullYear();
                             return (
                                 <tr key={record.activity_records_id}>

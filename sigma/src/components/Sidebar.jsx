@@ -9,6 +9,8 @@ import { BiLogOut } from "react-icons/bi";
 import { FaList } from "react-icons/fa";
 
 const Sidebar = ({ loginStatus, setLoginStatus }) => {
+    axios.defaults.withCredentials = true;
+
     const logout = () => {
         axios.post("http://localhost:3001/users/logout").then((res) => {
             setLoginStatus(res.data);

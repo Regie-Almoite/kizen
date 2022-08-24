@@ -5,6 +5,7 @@ const db = require("../config/dbConfig");
 const saltRounds = 10;
 
 router.get("/login", (req, res) => {
+    console.log(req.session.user);
     if (req.session.user) {
         res.send({ loggedIn: true, user: req.session.user });
     } else {

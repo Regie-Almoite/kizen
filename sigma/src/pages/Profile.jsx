@@ -9,13 +9,15 @@ import { AppContext } from "../App";
 const Profile = () => {
     const { loginStatus, setLoginStatus } = useContext(AppContext);
     const navigate = useNavigate();
-    // const { userId } = useParams();
+    const { userId } = useParams();
     const [edit, setEdit] = useState(false);
     const [changePass, setChangePass] = useState(false);
     const [showPass, setShowPass] = useState(false);
     const [firstName, setFirstName] = useState(loginStatus.user?.first_name);
     const [lastName, setLastName] = useState(loginStatus.user?.last_name);
     const [password, setPassword] = useState("");
+
+    axios.defaults.withCredentials = true;
 
     const updateHandler = async (e) => {
         e.preventDefault();
@@ -54,7 +56,30 @@ const Profile = () => {
         setChangePass(!changePass);
     };
 
-    useEffect(() => {}, []);
+    useEffect(() => {
+        axios.get("http://localhost:3001/users/login").then((res) => {
+            console.log(JSON.stringify(loginStatus) + "loginstat");
+            console.log(JSON.stringify(res.data) + "res");
+            if (res.data.loggedIn === true) {
+                setLoginStatus({
+                    loggedIn: true,
+                    user: {
+                        user_id: res.data.user[0]?.user_id,
+                        first_name: res.data.user[0]?.first_name,
+                        last_name: res.data.user[0]?.last_name,
+                        role_id: res.data.user[0]?.role_id,
+                    },
+                });
+
+                if (userId !== res.data.user[0]?.user_id) {
+                    navigate(`/profile/${res.data.user[0]?.user_id}`);
+                }
+            } else {
+                console.log(res.data);
+                setLoginStatus(res.data);
+            }
+        });
+    }, []);
 
     return (
         <div className="flex bg-[#16161a] p-2 h-screen">

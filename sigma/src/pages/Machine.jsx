@@ -30,6 +30,8 @@ const Machine = () => {
     const [product, setProduct] = useState("");
     const navigate = useNavigate();
 
+    axios.defaults.withCredentials = true;
+
     const getMachine = async () => {
         try {
             const machineData = await axios
@@ -105,7 +107,23 @@ const Machine = () => {
         }
     };
 
-    useEffect(() => {}, []);
+    useEffect(() => {
+        axios.get("http://localhost:3001/users/login").then((res) => {
+            if (res.data.loggedIn === true) {
+                setLoginStatus({
+                    loggedIn: true,
+                    user: {
+                        user_id: res.data.user[0]?.user_id,
+                        first_name: res.data.user[0]?.first_name,
+                        last_name: res.data.user[0]?.last_name,
+                        role_id: res.data.user[0]?.role_id,
+                    },
+                });
+            } else {
+                setLoginStatus(res.data);
+            }
+        });
+    }, []);
 
     useEffect(() => {
         getMachine();

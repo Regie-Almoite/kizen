@@ -22,12 +22,37 @@ const Dashboard = () => {
     const navigate = useNavigate();
     const [machines, setMachines] = useState([]);
 
+    axios.defaults.withCredentials = true;
+
     const getMachines = async () => {
         await axios.get("http://localhost:3001/machines").then((res) => {
             setMachines(res.data);
         });
     };
-    useEffect(() => {}, []);
+
+    useEffect(() => {
+        axios.get("http://localhost:3001/users/login").then((res) => {
+            console.log(res.data);
+            if (res.data.loggedIn === true) {
+                setLoginStatus({
+                    loggedIn: true,
+                    user: {
+                        user_id: res.data.user[0]?.user_id,
+                        first_name: res.data.user[0]?.first_name,
+                        last_name: res.data.user[0]?.last_name,
+                        role_id: res.data.user[0]?.role_id,
+                    },
+                });
+
+                if (res.data.user[0].role_id === 1) {
+                    navigate("/adminDashboard");
+                }
+            } else {
+                setLoginStatus(res.data);
+            }
+        });
+        getMachines();
+    }, []);
 
     return (
         <div className="flex bg-[#16161a] p-2 h-screen">
