@@ -14,22 +14,30 @@ const StatusHistory = () => {
     axios.defaults.withCredentials = true;
 
     useEffect(() => {
-        axios.get("http://localhost:3001/users/login").then((res) => {
-            if (res.data.loggedIn === true) {
-                setLoginStatus({
-                    loggedIn: true,
-                    user: {
-                        user_id: res.data.user[0]?.user_id,
-                        first_name: res.data.user[0]?.first_name,
-                        last_name: res.data.user[0]?.last_name,
-                        role_id: res.data.user[0]?.role_id,
-                    },
-                });
-            } else {
-                setLoginStatus(res.data);
-                navigate("/");
-            }
-        });
+        let user = JSON.parse(localStorage.getItem("user"));
+
+        if (!user) user = { loggedIn: false };
+        if (user.loggedIn) {
+            setLoginStatus(user);
+        } else {
+            navigate("/");
+        }
+        // axios.get("http://localhost:3001/users/login").then((res) => {
+        //     if (res.data.loggedIn === true) {
+        //         setLoginStatus({
+        //             loggedIn: true,
+        //             user: {
+        //                 user_id: res.data.user[0]?.user_id,
+        //                 first_name: res.data.user[0]?.first_name,
+        //                 last_name: res.data.user[0]?.last_name,
+        //                 role_id: res.data.user[0]?.role_id,
+        //             },
+        //         });
+        //     } else {
+        //         setLoginStatus(res.data);
+        //         navigate("/");
+        //     }
+        // });
         axios.get("http://localhost:3001/records").then((res) => {
             setRecords(
                 res.data.map((record) => {
@@ -119,13 +127,6 @@ const StatusHistory = () => {
                                     );
                                 })
                                 .map((record) => {
-                                    const date = new Date(record.created_at);
-                                    const hours = date.getHours();
-                                    const minutes = date.getMinutes();
-                                    const seconds = date.getSeconds();
-                                    const month = date.getMonth() + 1;
-                                    const day = date.getDate();
-                                    const year = date.getFullYear();
                                     return (
                                         <tr key={record.activity_records_id}>
                                             <td>MT-{record.machine_id}</td>
@@ -133,22 +134,6 @@ const StatusHistory = () => {
                                             <td>{record.user_id}</td>
                                             <td>{record.time}</td>
                                             <td>{record.date}</td>
-                                            {/* <td>{`${
-                                            hours < 10 ? "0" + hours : hours
-                                        } : ${
-                                            minutes < 10
-                                                ? "0" + minutes
-                                                : minutes
-                                        } : ${
-                                            seconds < 10
-                                                ? "0" + seconds
-                                                : seconds
-                                        }`}</td> */}
-                                            {/* <td>{`${
-                                            month < 10 ? "0" + month : month
-                                        }/${
-                                            day < 10 ? "0" + day : day
-                                        }/${year}`}</td> */}
                                             <td>{record.comment}</td>
                                             <td
                                                 className={`${

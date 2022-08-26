@@ -12,6 +12,7 @@ const Sidebar = ({ loginStatus, setLoginStatus }) => {
     axios.defaults.withCredentials = true;
 
     const logout = () => {
+        localStorage.setItem("user", JSON.stringify({ loggedIn: false }));
         axios.post("http://localhost:3001/users/logout").then((res) => {
             setLoginStatus(res.data);
         });

@@ -5,6 +5,7 @@ import globe from "../assets/images/globe.jpg";
 import logo from "../assets/images/KaizenLogo.png";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
+import CryptoJS from "crypto-js";
 
 const style = {
     wrapper: `h-screen grid grid-cols-1 md:grid-cols-2`,
@@ -90,16 +91,20 @@ const Login = () => {
                 if (res.data["message"]) {
                     dispatch({ type: "error", errorMsg: res.data["message"] });
                 } else {
-                    setLoginStatus({
-                        loggedIn: true,
-                        user: {
-                            user_id: res.data[0].user_id,
-                            first_name: res.data[0].first_name,
-                            last_name: res.data[0].last_name,
-                            role_id: res.data[0].role_id,
-                        },
-                    });
-
+                    localStorage.setItem(
+                        "user",
+                        JSON.stringify({
+                            loggedIn: true,
+                            user: {
+                                user_id: res.data[0].user_id,
+                                first_name: res.data[0].first_name,
+                                last_name: res.data[0].last_name,
+                                role_id: res.data[0].role_id,
+                            },
+                        })
+                    );
+                    const user = JSON.parse(localStorage.getItem("user"));
+                    setLoginStatus(user);
                     if (res.data[0].role_id === 1) {
                         navigate("/adminDashboard");
                     } else {
@@ -124,27 +129,37 @@ const Login = () => {
     };
 
     useEffect(() => {
-        axios.get("http://localhost:3001/users/login").then((res) => {
-            if (res.data.loggedIn === true) {
-                setLoginStatus({
-                    loggedIn: true,
-                    user: {
-                        user_id: res.data.user[0]?.user_id,
-                        first_name: res.data.user[0]?.first_name,
-                        last_name: res.data.user[0]?.last_name,
-                        role_id: res.data.user[0]?.role_id,
-                    },
-                });
-                if (res.data.user?.role_id === 1) {
-                    navigate("/adminDashboard");
-                } else {
-                    navigate("/dashboard");
-                }
-            } else {
-                setLoginStatus(res.data);
-                navigate("/");
-            }
-        });
+        let user = JSON.parse(localStorage.getItem("user"));
+        if (!user) user = { loggedIn: false };
+        if (user.loggedIn) {
+            setLoginStatus(user);
+            user.user.role_id === 1
+                ? navigate("/adminDashboard")
+                : navigate("/dashboard");
+        } else {
+            navigate("/");
+        }
+        // axios.get("http://localhost:3001/users/login").then((res) => {
+        //     if (res.data.loggedIn === true) {
+        //         setLoginStatus({
+        //             loggedIn: true,
+        //             user: {
+        //                 user_id: res.data.user[0]?.user_id,
+        //                 first_name: res.data.user[0]?.first_name,
+        //                 last_name: res.data.user[0]?.last_name,
+        //                 role_id: res.data.user[0]?.role_id,
+        //             },
+        //         });
+        //         if (res.data.user?.role_id === 1) {
+        //             navigate("/adminDashboard");
+        //         } else {
+        //             navigate("/dashboard");
+        //         }
+        //     } else {
+        //         setLoginStatus(res.data);
+        //         navigate("/");
+        //     }
+        // });
     }, []);
 
     return (

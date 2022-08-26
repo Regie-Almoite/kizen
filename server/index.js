@@ -1,6 +1,6 @@
 const express = require("express");
 const app = express();
-const port = 3001;
+const PORT = 3001;
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
@@ -48,6 +48,6 @@ app.use("/status", statusRoute);
 app.use("/errors", errorsRoute);
 app.use("/records", recordsRoute);
 
-app.listen(port, () => {
-    console.log(`connecting to port ${port}`);
+app.listen(process.env.PORT || PORT, () => {
+    console.log(`connecting to port ${PORT}`);
 });

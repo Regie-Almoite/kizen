@@ -103,29 +103,42 @@ const Machine = () => {
     };
 
     useEffect(() => {
-        axios.get("http://localhost:3001/users/login").then((res) => {
-            if (res.data.loggedIn === true) {
-                setLoginStatus({
-                    loggedIn: true,
-                    user: {
-                        user_id: res.data.user[0]?.user_id,
-                        first_name: res.data.user[0]?.first_name,
-                        last_name: res.data.user[0]?.last_name,
-                        role_id: res.data.user[0]?.role_id,
-                    },
-                });
-                if (res.data.user[0]?.role_id === 1) {
-                    navigate("/adminDashboard");
-                } else if (res.data.user[0]?.role_id === 2) {
-                    navigate("/viewDashboard");
-                } else {
-                    navigate(`/machine/${machineId}`);
-                }
-            } else {
-                setLoginStatus(res.data);
-                navigate("/");
-            }
-        });
+        let user = JSON.parse(localStorage.getItem("user"));
+
+        if (!user) user = { loggedIn: false };
+        if (user.loggedIn) {
+            setLoginStatus(user);
+            user.user.role_id === 1
+                ? navigate("/adminDashboard")
+                : user.user.role_id === 2
+                ? navigate("/viewDashboard")
+                : navigate(`/machine/${machineId}`);
+        } else {
+            navigate("/");
+        }
+        // axios.get("http://localhost:3001/users/login").then((res) => {
+        //     if (res.data.loggedIn === true) {
+        //         setLoginStatus({
+        //             loggedIn: true,
+        //             user: {
+        //                 user_id: res.data.user[0]?.user_id,
+        //                 first_name: res.data.user[0]?.first_name,
+        //                 last_name: res.data.user[0]?.last_name,
+        //                 role_id: res.data.user[0]?.role_id,
+        //             },
+        //         });
+        //         if (res.data.user[0]?.role_id === 1) {
+        //             navigate("/adminDashboard");
+        //         } else if (res.data.user[0]?.role_id === 2) {
+        //             navigate("/viewDashboard");
+        //         } else {
+        //             navigate(`/machine/${machineId}`);
+        //         }
+        //     } else {
+        //         setLoginStatus(res.data);
+        //         navigate("/");
+        //     }
+        // });
     }, []);
 
     useEffect(() => {
@@ -195,7 +208,7 @@ const Machine = () => {
                                 Operator ID
                             </span>
                             <input
-                                className="p-2 text-xl md:text-2xl"
+                                className="p-2 text-xl md:text-2xl rounded-md"
                                 type="number"
                                 disabled
                                 value={loginStatus.user?.user_id}
@@ -246,7 +259,7 @@ const Machine = () => {
                         <div className="flex flex-col my-2">
                             <span className="text-xl md:text-2xl">Product</span>
                             <input
-                                className="p-2 border border-black text-xl md:text-2xl"
+                                className="p-2 border border-black text-xl md:text-2xl rounded-md"
                                 type="text"
                                 value={product}
                                 onChange={(e) => setProduct(e.target.value)}
@@ -255,7 +268,7 @@ const Machine = () => {
                         <div className="flex flex-col my-2">
                             <span className="text-xl md:text-2xl">Comment</span>
                             <textarea
-                                className="p-2 border border-black text-xl md:text-2xl"
+                                className="p-2 border border-black text-xl md:text-2xl rounded-md"
                                 value={comment}
                                 rows="3"
                                 onChange={(e) => {

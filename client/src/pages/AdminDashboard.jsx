@@ -114,25 +114,34 @@ const AdminDashboard = () => {
     };
 
     useEffect(() => {
-        axios.get("http://localhost:3001/users/login").then((res) => {
-            if (res.data.loggedIn === true) {
-                setLoginStatus({
-                    loggedIn: true,
-                    user: {
-                        user_id: res.data.user[0]?.user_id,
-                        first_name: res.data.user[0]?.first_name,
-                        last_name: res.data.user[0]?.last_name,
-                        role_id: res.data.user[0]?.role_id,
-                    },
-                });
-                if (res.data.user[0].role_id !== 1) {
-                    navigate("/dashboard");
-                }
-            } else {
-                setLoginStatus(res.data);
-                navigate("/");
-            }
-        });
+        let user = JSON.parse(localStorage.getItem("user"));
+
+        if (!user) user = { loggedIn: false };
+        if (user.loggedIn) {
+            setLoginStatus(user);
+            user.user.role_id !== 1 && navigate("/dashboard");
+        } else {
+            navigate("/");
+        }
+        // axios.get("http://localhost:3001/users/login").then((res) => {
+        //     if (res.data.loggedIn === true) {
+        //         setLoginStatus({
+        //             loggedIn: true,
+        //             user: {
+        //                 user_id: res.data.user[0]?.user_id,
+        //                 first_name: res.data.user[0]?.first_name,
+        //                 last_name: res.data.user[0]?.last_name,
+        //                 role_id: res.data.user[0]?.role_id,
+        //             },
+        //         });
+        //         if (res.data.user[0].role_id !== 1) {
+        //             navigate("/dashboard");
+        //         }
+        //     } else {
+        //         setLoginStatus(res.data);
+        //         navigate("/");
+        //     }
+        // });
     }, []);
 
     useEffect(() => {
@@ -186,8 +195,6 @@ const AdminDashboard = () => {
                             <input
                                 className="text-xl md:text-2xl border p-2 rounded-md"
                                 type="email"
-                                // value={email}
-                                // onChange={(e) => setEmail(e.target.value)}
                                 {...register("email")}
                             />
                             <p className="text-rose-500">
@@ -203,8 +210,6 @@ const AdminDashboard = () => {
                             <span className="text-xl md:text-2xl">Role</span>
                             <select
                                 className="text-xl md:text-2xl border border-[#010101] p-2 rounded-md "
-                                // value={role}
-                                // onChange={(e) => setRole(e.target.value)}
                                 {...register("role_id")}
                             >
                                 <option value="">--Select Role--</option>
@@ -231,10 +236,6 @@ const AdminDashboard = () => {
                                 <input
                                     className="w-full text-xl md:text-2xl border p-2 rounded-md "
                                     type={seePassword ? "text" : "password"}
-                                    // value={password}
-                                    // onChange={(e) => {
-                                    //     setPassword(e.target.value);
-                                    // }}
                                     {...register("password")}
                                 />
                                 {seePassword ? (

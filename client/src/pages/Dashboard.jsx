@@ -23,95 +23,102 @@ const Dashboard = () => {
     const [machines, setMachines] = useState([]);
     const [searchId, setSearchId] = useState("");
     const [filterStatus, setFilterStatus] = useState("");
-    // const [prCount, setPrCount] = useState(0);
-    // const [suCount, setSuCount] = useState(0);
-    // const [pdCount, setPdCount] = useState(0);
-    // const [edCount, setEdCount] = useState(0);
-    // const [idCount, setIdCount] = useState(0);
-    // const [machinesCount, setMachinesCount] = useState(0);
+    const [prCount, setPrCount] = useState("");
+    const [suCount, setSuCount] = useState("");
+    const [pdCount, setPdCount] = useState("");
+    const [edCount, setEdCount] = useState("");
+    const [idCount, setIdCount] = useState("");
+    const [machinesCount, setMachinesCount] = useState("");
 
     axios.defaults.withCredentials = true;
 
     const getMachines = async () => {
         await axios.get("http://localhost:3001/machines").then((res) => {
             setMachines(res.data);
-            console.log(res.data);
         });
     };
 
-    // const pr_count = async () => {
-    //     await axios
-    //         .get("http://localhost:3001/machines/statusCount/pr")
-    //         .then((res) => {
-    //             setPrCount(res.data.pr_count);
-    //         });
-    // };
-    // const su_count = async () => {
-    //     await axios
-    //         .get("http://localhost:3001/machines/statusCount/su")
-    //         .then((res) => {
-    //             setSuCount(res.data.su_count);
-    //         });
-    // };
-    // const pd_count = async () => {
-    //     await axios
-    //         .get("http://localhost:3001/machines/statusCount/pd")
-    //         .then((res) => {
-    //             setPdCount(res.data.pd_count);
-    //         });
-    // };
-    // const ed_count = async () => {
-    //     await axios
-    //         .get("http://localhost:3001/machines/statusCount/ed")
-    //         .then((res) => {
-    //             setEdCount(res.data.ed_count);
-    //         });
-    // };
-    // const id_count = async () => {
-    //     await axios
-    //         .get("http://localhost:3001/machines/statusCount/id")
-    //         .then((res) => {
-    //             setIdCount(res.data.id_count);
-    //         });
-    // };
+    const pr_count = async () => {
+        await axios
+            .get("http://localhost:3001/machines/statusCount/pr")
+            .then((res) => {
+                setPrCount(res.data.pr_count);
+            });
+    };
+    const su_count = async () => {
+        await axios
+            .get("http://localhost:3001/machines/statusCount/su")
+            .then((res) => {
+                setSuCount(res.data.su_count);
+            });
+    };
+    const pd_count = async () => {
+        await axios
+            .get("http://localhost:3001/machines/statusCount/pd")
+            .then((res) => {
+                setPdCount(res.data.pd_count);
+            });
+    };
+    const ed_count = async () => {
+        await axios
+            .get("http://localhost:3001/machines/statusCount/ed")
+            .then((res) => {
+                setEdCount(res.data.ed_count);
+            });
+    };
+    const id_count = async () => {
+        await axios
+            .get("http://localhost:3001/machines/statusCount/id")
+            .then((res) => {
+                setIdCount(res.data.id_count);
+            });
+    };
 
-    // const machines_count = async () => {
-    //     await axios
-    //         .get("http://localhost:3001/machines/statusCount/machines_count")
-    //         .then((res) => {
-    //             setMachinesCount(res.data.machines_count);
-    //         });
-    // };
+    const machines_count = async () => {
+        await axios
+            .get("http://localhost:3001/machines/statusCount/machines_count")
+            .then((res) => {
+                setMachinesCount(res.data.machines_count);
+            });
+    };
 
     useEffect(() => {
-        // pr_count();
-        // su_count();
-        // pd_count();
-        // ed_count();
-        // id_count();
-        // machines_count();
-        axios.get("http://localhost:3001/users/login").then((res) => {
-            console.log(res.data);
-            if (res.data.loggedIn === true) {
-                setLoginStatus({
-                    loggedIn: true,
-                    user: {
-                        user_id: res.data.user[0]?.user_id,
-                        first_name: res.data.user[0]?.first_name,
-                        last_name: res.data.user[0]?.last_name,
-                        role_id: res.data.user[0]?.role_id,
-                    },
-                });
+        let user = JSON.parse(localStorage.getItem("user"));
+        if (!user) user = { loggedIn: false };
+        if (user.loggedIn) {
+            setLoginStatus(user);
+            user.user.role_id === 1 && navigate("/adminDashboard");
+        } else {
+            navigate("/");
+        }
+        // axios.get("http://localhost:3001/users/login").then((res) => {
+        //     console.log(res.data);
+        //     if (res.data.loggedIn === true) {
+        //         setLoginStatus({
+        //             loggedIn: true,
+        //             user: {
+        //                 user_id: res.data.user[0]?.user_id,
+        //                 first_name: res.data.user[0]?.first_name,
+        //                 last_name: res.data.user[0]?.last_name,
+        //                 role_id: res.data.user[0]?.role_id,
+        //             },
+        //         });
 
-                if (res.data.user[0].role_id === 1) {
-                    navigate("/adminDashboard");
-                }
-            } else {
-                setLoginStatus(res.data);
-                navigate("/");
-            }
-        });
+        //         if (res.data.user[0].role_id === 1) {
+        //             navigate("/adminDashboard");
+        //         }
+        //     } else {
+        //         setLoginStatus(res.data);
+        //         navigate("/");
+        //     }
+        // });
         getMachines();
+        pr_count();
+        su_count();
+        pd_count();
+        ed_count();
+        id_count();
+        machines_count();
     }, []);
 
     return (
@@ -120,31 +127,30 @@ const Dashboard = () => {
                 loginStatus={loginStatus}
                 setLoginStatus={setLoginStatus}
             />
-            <div className="bg-[#fffffe] p-2 m-2 overflow-auto relative rounded-md w-full">
-                {/* <div className="sticky top-0 flex items-center p-2">
-                    <input
-                        className="w-full p-2 text-xl md:text-2xl rounded-tl-md rounded-bl-md form-input "
-                        type="number"
-                        placeholder="Search by machine ID"
-                        value={searchId}
-                        onChange={(e) => setSearchId(e.target.value)}
-                    />
-                    <select
-                        className="w-[400px] p-2 text-xl md:text-2xl rounded-none form-select rounded-tr-md rounded-br-md"
-                        name="filter"
-                        id="filter"
-                        value={filterStatus}
-                        onChange={(e) => setFilterStatus(e.target.value)}
-                    >
-                        <option value="">Filter by status</option>
-                        <option value="pr">Production Run</option>
-                        <option value="su">Machine Setup</option>
-                        <option value="pd">Production Down</option>
-                        <option value="ed">Equipment Down</option>
-                        <option value="id">Idle</option>
-                    </select>
-                </div> */}
-                <div className="p-2 max-h-screen grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-5 w-full overflow-auto">
+            <div className="rounded-md w-full flex flex-col m-2 justify-between gap-5">
+                <div className="grid grid-cols-5 gap-5 rounded-md ">
+                    <div className="h-[200px] flex flex-col justify-center items-center text-xl md:text-2xl font-bold text-[#fffffe] bg-gradient-to-tr from-green-600 via-green-500 to-green-400 rounded-md">
+                        <p>{(prCount / machinesCount) * 100 + "%"}</p>
+                        <p>Production Run</p>
+                    </div>
+                    <div className="h-[200px] flex flex-col justify-center items-center text-xl md:text-2xl font-bold text-[#fffffe] bg-gradient-to-tr from-yellow-600 via-yellow-500 to-yellow-400 rounded-md">
+                        <p>{(suCount / machinesCount) * 100 + "%"}</p>
+                        <p>Machine Setup</p>
+                    </div>
+                    <div className="h-[200px] flex flex-col justify-center items-center text-xl md:text-2xl font-bold text-[#fffffe] bg-gradient-to-tr from-rose-600 via-rose-500 to-rose-400 rounded-md">
+                        <p>{(pdCount / machinesCount) * 100 + "%"}</p>
+                        <p>Production Down</p>
+                    </div>
+                    <div className="h-[200px] flex flex-col justify-center items-center text-xl md:text-2xl font-bold text-[#fffffe] bg-gradient-to-tr from-sky-600 via-sky-500 to-sky-400 rounded-md">
+                        <p>{(edCount / machinesCount) * 100 + "%"}</p>
+                        <p>Equipment Down</p>
+                    </div>
+                    <div className="h-[200px] flex flex-col justify-center items-center text-xl md:text-2xl font-bold text-[#fffffe] bg-gradient-to-tr from-gray-600 via-gray-500 to-gray-400 rounded-md">
+                        <p>{(idCount / machinesCount) * 100 + "%"}</p>
+                        <p>Idle</p>
+                    </div>
+                </div>
+                <div className="grid grid-cols-4 gap-5 bg-[#fffffe] p-2 rounded-md overflow-auto h-full">
                     {machines
                         .filter((machine) => {
                             return (

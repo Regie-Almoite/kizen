@@ -59,25 +59,35 @@ const Profile = () => {
     };
 
     useEffect(() => {
-        axios.get("http://localhost:3001/users/login").then((res) => {
-            if (res.data.loggedIn === true) {
-                setLoginStatus({
-                    loggedIn: true,
-                    user: {
-                        user_id: res.data.user[0]?.user_id,
-                        first_name: res.data.user[0]?.first_name,
-                        last_name: res.data.user[0]?.last_name,
-                        role_id: res.data.user[0]?.role_id,
-                    },
-                });
-                if (userId !== res.data.user[0]?.user_id) {
-                    navigate(`/profile/${res.data.user[0]?.user_id}`);
-                }
-            } else {
-                setLoginStatus(res.data);
-                navigate("/");
-            }
-        });
+        let user = JSON.parse(localStorage.getItem("user"));
+
+        if (!user) user = { loggedIn: false };
+        if (user.loggedIn) {
+            setLoginStatus(user);
+            userId !== user.user.user_id &&
+                navigate(`/profile/${user.user.user_id}`);
+        } else {
+            navigate("/");
+        }
+        // axios.get("http://localhost:3001/users/login").then((res) => {
+        //     if (res.data.loggedIn === true) {
+        //         setLoginStatus({
+        //             loggedIn: true,
+        //             user: {
+        //                 user_id: res.data.user[0]?.user_id,
+        //                 first_name: res.data.user[0]?.first_name,
+        //                 last_name: res.data.user[0]?.last_name,
+        //                 role_id: res.data.user[0]?.role_id,
+        //             },
+        //         });
+        //         if (userId !== res.data.user[0]?.user_id) {
+        //             navigate(`/profile/${res.data.user[0]?.user_id}`);
+        //         }
+        //     } else {
+        //         setLoginStatus(res.data);
+        //         navigate("/");
+        //     }
+        // });
     }, []);
 
     return (
@@ -221,9 +231,9 @@ const Profile = () => {
                                                 )}
                                             </div>
                                         </div>
-                                        <div className="flex justify-between my-2">
+                                        <div className="flex justify-between gap-2">
                                             <button
-                                                className="text-xl md:text-2xl p-2 bg-red-500 hover:bg-red-400 rounded-md"
+                                                className="text-xl md:text-2xl p-2 bg-red-500 hover:bg-red-400 rounded-md w-full"
                                                 onClick={() =>
                                                     setChangePass(!changePass)
                                                 }
@@ -231,7 +241,7 @@ const Profile = () => {
                                                 Cancel
                                             </button>
                                             <button
-                                                className="text-xl md:text-2xl p-2 bg-[#7f5af0] hover:bg-[#9B80EC] text-[#fffffe] rounded-md"
+                                                className="text-xl md:text-2xl p-2 bg-[#7f5af0] hover:bg-[#9B80EC] text-[#fffffe] rounded-md w-full"
                                                 onClick={changePassHandler}
                                             >
                                                 Confirm
